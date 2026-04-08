@@ -1,34 +1,32 @@
-const express = require("express");
-const cors = require("cors");
-const { execFile } = require("child_process");
-const path = require("path");
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/predict", (req, res) => {
-  const inputData = req.body;
-  const data = JSON.stringify(inputData);
-
-  const scriptPath = path.join(__dirname, "../ml/predict.py");
-
-  execFile("python", [scriptPath, data], (error, stdout, stderr) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).send("Error in prediction");
-    }
-
+app.post('/api/predict', async (req, res) => {
     try {
-      const result = JSON.parse(stdout);
-      res.json(result);
-    } catch (e) {
-      console.error(stderr);
-      res.status(500).send("Invalid response from Python");
+        const { age, study_fail_ratio, parent_edu, social_score, goout, failures } = req.body;
+        
+        // Basic validation
+        if ([age, study_fail_ratio, parent_edu, social_score, goout, failures].some(x => x === undefined)) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Call ML Service
+        const mlResponse = await axios.post('http://localhost:8000/predict', req.body);
+        const data = mlResponse.data;
+        
+        res.json(data);
+    } catch (error) {
+        console.error("Error communicating with ML service:", error.message);
+        res.status(500).json({ error: "ML Service Error" });
     }
-  });
 });
 
-app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT}`);
 });

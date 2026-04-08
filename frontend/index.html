@@ -1,124 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Prediction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333333;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-            color: #555555;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        h3 {
-            margin-top: 20px;
-            color: #333333;
-            text-align: center;
-        }
-
-        span {
-            font-weight: bold;
-            color: #1a73e8;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2>Student Performance Prediction</h2>
-
-    <label>Study Time (hours/week):</label>
-    <input id="study_time" type="number" min="0" max="20" step="1"><br>
-
-    <label>Failures:</label>
-    <input id="failures" type="number" min="0" max="5" step="1"><br>
-
-    <label>Absences:</label>
-    <input id="absences" type="number" min="0" max="100" step="1"><br>
-
-    <label>G1:</label>
-    <input id="g1" type="number" min="0" max="10" step="1"><br>
-
-    <label>G2:</label>
-    <input id="g2" type="number" min="0" max="10" step="1"><br>
-
-    <button onclick="predict()">Predict</button>
-
-    <h3>Prediction: <span id="prediction"></span></h3>
-    <h3>Cluster: <span id="cluster"></span></h3>
-</div>
-
-<script>
-async function predict() {
-    const data = {
-        study_time: Number(document.getElementById("study_time").value),
-        failures: Number(document.getElementById("failures").value),
-        absences: Number(document.getElementById("absences").value),
-        g1: Number(document.getElementById("g1").value),
-        g2: Number(document.getElementById("g2").value)
-    };
-
-    const response = await fetch("http://localhost:5000/predict", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
-
-    const result = await response.json();
-
-    document.getElementById("prediction").innerText = result.prediction;
-    document.getElementById("cluster").innerText = result.cluster;
-}
-</script>
-
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
